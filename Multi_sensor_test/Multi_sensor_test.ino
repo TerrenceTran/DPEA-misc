@@ -1,7 +1,7 @@
 // Tests the whole system of 4 with the multiplexor
 
 #include <Wire.h>
-#include "Adafruit_VL6180X.h" // REMEMBER TO DOWNLOAD THIS LIBRARY
+#include <Adafruit_VL6180X.h> // REMEMBER TO DOWNLOAD THIS LIBRARY
 
 #define Multiplex 0x70
 #define IRSensor 0x29
