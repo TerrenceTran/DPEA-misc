@@ -2,19 +2,22 @@
 
 #include <Wire.h>
 #include <Adafruit_VL6180X.h> // REMEMBER TO DOWNLOAD THIS LIBRARY
+extern "C" {
+#include "utility/twi.h"  // from Wire library, so we can do bus scanning
+}
 
 #define Multiplex 0x70
 #define IRSensor 0x29
 
 Adafruit_VL6180X sensor = Adafruit_VL6180X();
 
+const int LED_PIN = 10;
+
 ////////////////////////// SELECT BETWEEN 0-3 //////////////////////////
 
-const uint8_t port = 2; //choose port from 0-3 //////////////////////////
+const uint8_t port = 0; //choose port from 0-3 //////////////////////////
 
 void TCASelect(uint8_t i) {
-  if (i > 3) return; // if invalid input
-
   Wire.beginTransmission(Multiplex);
   Wire.write(1 << i);
   Wire.endTransmission();
@@ -24,19 +27,37 @@ void TCASelect(uint8_t i) {
 }
 
 void setup() {
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
+
+/////////////////////////////////////////// THIS FUCKING LINE I SWEAR
+  while (!Serial);
+  delay(100);
+  Wire.begin();
+////////////////////////////////////////////
+
   TCASelect(port);
+  digitalWrite(LED_PIN, HIGH);
 
   Serial.begin(115200);
   Serial.println("Starting Setup!");
 
-  // wait for serial port to open on native usb devices
-  while (!Serial) {
-    delay(1);
+  // wait for Serial port to open on native usb devices
+  //while (!Serial) {
+  //  delay(1);
+  //}
+
+  while (!sensor.begin()) {
+    TCASelect(port); ///////////////// THIS WORKED?!?!!?!?/////////////////////////////
+    sensor.begin();
+    Serial.println("TRYING GDI");
+    digitalWrite(LED_PIN, HIGH);
+    delay(250);
+    digitalWrite(LED_PIN, LOW);
+    delay(350);
   }
 
-  sensor.begin();
-
-  if (! sensor.begin()) {
+  if (!sensor.begin()) {
     Serial.print("Failed to find sensor ");
     Serial.println(port);
     //while (1); // halts if not found
@@ -51,6 +72,7 @@ void setup() {
 
 void loop() {
   //TCASelect(port);
+  digitalWrite(LED_PIN, LOW);
 
   float lux = sensor.readLux(VL6180X_ALS_GAIN_5);
 
@@ -61,6 +83,7 @@ void loop() {
 
   if (status == VL6180X_ERROR_NONE) {
     Serial.print("Range: "); Serial.println(range);
+    digitalWrite(LED_PIN, HIGH);
   }
 
   // Some error occurred, print it out!

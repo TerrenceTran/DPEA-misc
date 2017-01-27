@@ -1,15 +1,15 @@
-// Tests the whole system of 4 with the multiplexor
+// Tests the whole system of 4 LIDAR sensors with the multiplexor
 
 #include <Wire.h>
 #include <Adafruit_VL6180X.h> // REMEMBER TO DOWNLOAD THIS LIBRARY
+extern "C" {
+#include "utility/twi.h"  // from Wire library, so we can do bus scanning
+}
 
 #define Multiplex 0x70
-#define IRSensor 0x29
+#define IRSensor 0x29 // line not used, because address is default address declared in library
 
 Adafruit_VL6180X sensor = Adafruit_VL6180X();
-//Adafruit_VL6180X s1 = Adafruit_VL6180X();
-//Adafruit_VL6180X s2 = Adafruit_VL6180X();
-//Adafruit_VL6180X s3 = Adafruit_VL6180X();
 
 ////////////////////////// SELECT BETWEEN 0-3 //////////////////////////
 
@@ -24,24 +24,51 @@ void TCASelect(uint8_t i) {
   Serial.println(i);
 }
 
+//////////////////////     Set Up       ///////////////////////////
+/*  
+ *  Initializes Serial and Wire
+ *  Scans ports 0 - i for connection. Will not proceed unless they are detected
+ */
+
 void setup() {
+
+  while (!Serial);
+  delay(100);
+  Wire.begin();
+
   Serial.begin(115200);
   Serial.println("Starting Setup!");
 
-  for (int i = 0; i < 4; i++) {
+  for (uint8_t i = 0; i < 4; i++) {
     TCASelect(i);
+    /*
+        //////////////////// Insures Program Cannot Continue Until All Sensors Accounted For //////////////////////
+        while (!sensor.begin()) {
+          TCASelect(i); ///////////////// THIS WORKED?!?!!?!?/////////////////////////////
+          sensor.begin();
+          Serial.println("TRYING GDI");
+          delay(250);
+        }
+        ////////////////////  Un Comment If Needed    ///////////////////////////////////////////////////////////
+    */
     if (! sensor.begin()) {
       Serial.print("Failed to find sensor ");
       Serial.println(i);
-      //while (1);
+      while (1); // Halts until all sensors found
     }
 
     Serial.print("Sensor ");
     Serial.print(i);
     Serial.println(" found!");
   }
-  delay(2000);
+  delay(1000);
 }
+
+
+////////////////////////////////////     LOOP      //////////////////////////////////////////
+/*
+ * Sequentailly scans devices from ports 0-i for their LIDAR readings
+ */
 
 void loop() {
   for (int i = 0; i < 4; i++) {
@@ -49,7 +76,7 @@ void loop() {
     TCASelect(i);
     uint8_t range = sensor.readRange();
     uint8_t status = sensor.readRangeStatus();
-    
+
     if (status == VL6180X_ERROR_NONE) {
       Serial.print("Range: "); Serial.println(range);
     }
