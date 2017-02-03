@@ -30,13 +30,13 @@ void loop() {
 
     // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
     if (i < NUMPIXELS)
-      ring.setPixelColor(i, ring.Color(0, 50, 0)); // Moderately bright green color.
+      ring.setPixelColor(i, ring.Color(0, 255, 0)); // Moderately bright green color.
 
     else if (i < 2 * NUMPIXELS)
-      ring.setPixelColor(i - NUMPIXELS, ring.Color(0, 0, 50)); // Moderately bright green color.
+      ring.setPixelColor(i - NUMPIXELS, ring.Color(0, 0, 255)); // Moderately bright green color.
 
     else
-      ring.setPixelColor(i - 2 * NUMPIXELS, ring.Color(50, 0, 0)); // Moderately bright green color.
+      ring.setPixelColor(i - 2 * NUMPIXELS, ring.Color(255, 0, 0)); // Moderately bright green color.
 
     ring.show(); // This sends the updated pixel color to the hardware.
 
