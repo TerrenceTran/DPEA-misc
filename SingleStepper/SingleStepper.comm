@@ -1,0 +1,9 @@
+class IDLE:
+    pass
+          
+class SINGLESTEPPER:
+    def master():
+        def events():
+            homeStepper
+        def values():
+            stepperPosition = uint32_t
