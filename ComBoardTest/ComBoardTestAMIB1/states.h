@@ -17,8 +17,7 @@ namespace events {
 }
 }
 
-namespace SINGLESTEPPER {
-extern Value<uint32_t> stepperPosition;
+namespace TEST {
 
 __attribute__((weak)) void setup();
 __attribute__((weak)) void enter();
@@ -29,13 +28,13 @@ __attribute__((weak)) void exit();
 namespace amib2 {
 
 namespace events {
-void homeStepper();
+void fastBlink();
 
 }
 }
 
 namespace events {
-void homeStepper();
+void fastBlink();
 }
 }
 
@@ -43,7 +42,7 @@ void homeStepper();
 
 enum State {
   STATE_IDLE,
-  STATE_SINGLESTEPPER
+  STATE_TEST
 };
 
-extern MasterManager<State, 2, 1> manager;
+extern MasterManager<State, 2, 0> manager;

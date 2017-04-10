@@ -1,0 +1,12 @@
+class IDLE:
+    pass
+          
+class SPIROGRAPH:
+    def master():
+        def events():
+            disableSteppers
+            enableSteppers
+        def values():
+            stepperSpeed1 = uint32_t
+            stepperSpeed2 = uint32_t
+            stepperSpeed3 = uint32_t

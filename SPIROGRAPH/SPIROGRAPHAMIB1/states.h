@@ -17,8 +17,10 @@ namespace events {
 }
 }
 
-namespace SINGLESTEPPER {
-extern Value<uint32_t> stepperPosition;
+namespace SPIROGRAPH {
+extern Value<uint32_t> stepperSpeed1;
+extern Value<uint32_t> stepperSpeed2;
+extern Value<uint32_t> stepperSpeed3;
 
 __attribute__((weak)) void setup();
 __attribute__((weak)) void enter();
@@ -26,16 +28,11 @@ __attribute__((weak)) void loop();
 void event(uint8_t);
 __attribute__((weak)) void exit();
 
-namespace amib2 {
+
 
 namespace events {
-void homeStepper();
-
-}
-}
-
-namespace events {
-void homeStepper();
+void disableSteppers();
+void enableSteppers();
 }
 }
 
@@ -43,7 +40,7 @@ void homeStepper();
 
 enum State {
   STATE_IDLE,
-  STATE_SINGLESTEPPER
+  STATE_SPIROGRAPH
 };
 
-extern MasterManager<State, 2, 1> manager;
+extern MasterManager<State, 2, 3> manager;

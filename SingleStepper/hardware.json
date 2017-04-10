@@ -1,8 +1,11 @@
 {
-  "name": "BetterArmThing",
+  "name": "SingleStepper",
   "AMIBs": {
     "AMIB1": {
-	    "serialNumber": "85436323531351010142"
+	    "serialNumber": "8543632363135180A090"
+    },    
+    "AMIB2": {
+	    "serialNumber": "8553130333135160D120"
     }
   }
 }

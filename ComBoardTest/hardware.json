@@ -1,0 +1,11 @@
+{
+  "name": "ComBoardTest",
+  "AMIBs": {
+    "AMIB1": {
+	    "serialNumber": "8553130383035160D111"
+    },    
+    "AMIB2": {
+	    "serialNumber": "7493730373635130A281"
+    }
+  }
+}

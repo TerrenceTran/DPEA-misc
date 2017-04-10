@@ -1,0 +1,10 @@
+class IDLE:
+    pass
+          
+class TEST:
+    def master():
+        def events():
+            fastBlink
+    def amib2():
+        def events():
+            fastBlink

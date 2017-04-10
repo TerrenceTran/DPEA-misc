@@ -1,3 +1,4 @@
+#include <SerialSlave.h>
 #include "states.h"
 
 static const StateInfo state_infos[2] = {
@@ -5,11 +6,11 @@ static const StateInfo state_infos[2] = {
   {SINGLESTEPPER::setup, SINGLESTEPPER::enter, SINGLESTEPPER::exit, SINGLESTEPPER::loop, SINGLESTEPPER::event}
 };
 
-static const WireValue wire_values[1] = {
-  {1, 0, sizeof(uint32_t), (Value<void*>*) &SINGLESTEPPER::stepperPosition}
+static const WireValue wire_values[0] = {
+  
 };
 
-MasterManager<State, 2, 1> manager(0x7e661ce3, state_infos, wire_values, 1);
+SlaveManager<State, 2, 0> manager(2, state_infos, wire_values);
 
 namespace IDLE {
 
@@ -22,10 +23,16 @@ void event(uint8_t ev) {
   }
 }
 
+namespace master {
+
+
+namespace events {
 
 }
+}
+}
 namespace SINGLESTEPPER {
-Value<uint32_t> stepperPosition;
+
 
 void event(uint8_t ev) {
   switch (ev) {
@@ -37,11 +44,14 @@ void event(uint8_t ev) {
   }
 }
 
-namespace amib2 {
+namespace master {
+RemoteValue<0, uint32_t> stepperPosition(0);
 
 namespace events {
-void homeStepper() { manager.sendSlaveEvent(2, 0); }
+void homeStepper() { manager.sendEvent(0); }
 }
 }
 }
 
+
+SLAVERECV

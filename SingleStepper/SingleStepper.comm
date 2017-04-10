@@ -7,3 +7,6 @@ class SINGLESTEPPER:
             homeStepper
         def values():
             stepperPosition = uint32_t
+    def amib2():
+        def events():
+            homeStepper

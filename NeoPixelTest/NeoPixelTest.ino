@@ -21,6 +21,9 @@ Adafruit_NeoPixel ring = Adafruit_NeoPixel(NUMPIXELS, PORT, NEO_GRB + NEO_KHZ800
 void setup() {
   ring.begin();
   ring.show(); // show makes them show their current setting. by default this is off
+
+  pinMode(9, OUTPUT);
+  digitalWrite(9, HIGH);
 }
 
 void loop() {

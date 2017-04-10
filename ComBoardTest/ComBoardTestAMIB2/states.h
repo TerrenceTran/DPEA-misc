@@ -1,5 +1,6 @@
 #pragma once
 
+#define SLAVEMANAGER
 #include <Manager.h>
 
 namespace IDLE {
@@ -10,15 +11,20 @@ __attribute__((weak)) void loop();
 void event(uint8_t);
 __attribute__((weak)) void exit();
 
+namespace events {
+
+}
+
+namespace master {
 
 
 namespace events {
 
 }
 }
+}
 
-namespace SINGLESTEPPER {
-extern Value<uint32_t> stepperPosition;
+namespace TEST {
 
 __attribute__((weak)) void setup();
 __attribute__((weak)) void enter();
@@ -26,16 +32,16 @@ __attribute__((weak)) void loop();
 void event(uint8_t);
 __attribute__((weak)) void exit();
 
-namespace amib2 {
-
 namespace events {
-void homeStepper();
-
-}
+void fastBlink();
 }
 
+namespace master {
+
+
 namespace events {
-void homeStepper();
+void fastBlink();
+}
 }
 }
 
@@ -43,7 +49,7 @@ void homeStepper();
 
 enum State {
   STATE_IDLE,
-  STATE_SINGLESTEPPER
+  STATE_TEST
 };
 
-extern MasterManager<State, 2, 1> manager;
+extern SlaveManager<State, 2, 0> manager;
