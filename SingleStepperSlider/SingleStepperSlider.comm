@@ -1,0 +1,11 @@
+class IDLE:
+    pass
+          
+class SINGLESTEPPERSLIDER:
+    def master():
+        def events():
+            homeStepper
+        def values():
+            position = uint32_t
+            speed = uint32_t
+            acceleration = uint32_t
