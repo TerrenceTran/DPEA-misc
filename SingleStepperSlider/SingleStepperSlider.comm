@@ -5,6 +5,8 @@ class SINGLESTEPPERSLIDER:
     def master():
         def events():
             homeStepper
+            positiveMove
+            negativeMove
         def values():
             position = uint32_t
             speed = uint32_t

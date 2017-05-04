@@ -32,6 +32,8 @@ __attribute__((weak)) void exit();
 
 namespace events {
 void homeStepper();
+void positiveMove();
+void negativeMove();
 }
 }
 

@@ -11,7 +11,7 @@ static const WireValue wire_values[3] = {
   {1, 2, sizeof(uint32_t), (Value<void*>*) &SINGLESTEPPERSLIDER::acceleration}
 };
 
-MasterManager<State, 2, 3> manager(0xe0a168ca, state_infos, wire_values, 0);
+MasterManager<State, 2, 3> manager(0x9aaa1bfc, state_infos, wire_values, 0);
 
 namespace IDLE {
 
@@ -35,6 +35,12 @@ void event(uint8_t ev) {
   switch (ev) {
   case 0:
     events::homeStepper();
+    break;
+  case 1:
+    events::positiveMove();
+    break;
+  case 2:
+    events::negativeMove();
     break;
   default:
     break;

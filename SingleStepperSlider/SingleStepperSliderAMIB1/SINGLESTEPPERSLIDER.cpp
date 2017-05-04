@@ -16,14 +16,11 @@ namespace SINGLESTEPPERSLIDER {
     stepper.setAccelerationInStepsPerSecondPerSecond(50);
     stepper.setCurrentPositionInSteps(0.0);
     stepper.enableStepper();
+    
+    position.value = 10;
   }
   
   void loop() {
-
-    if (position.changed) {
-      stepper.moveToPositionInSteps(position.value);
-      position.changed = false;
-    }
   
     if (speed.changed) {
       stepper.setSpeedInStepsPerSecond(speed.value);
@@ -39,6 +36,14 @@ namespace SINGLESTEPPERSLIDER {
   
   void events::homeStepper() {
 
+  }
+  
+  void events::positiveMove() {
+    stepper.moveRelativeInSteps(position.value);
+  }
+  
+  void events::negativeMove() {
+    stepper.moveRelativeInSteps(-1 * position.value);
   }
   
   void enter() {
