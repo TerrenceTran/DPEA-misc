@@ -18,7 +18,7 @@ import serial.tools.list_ports
 State = namedtuple('State', ('name', 'id', 'devices'))
 DeviceState = namedtuple('DeviceState', ('values', 'events'))
 
-STATES = [State(name='IDLE', id=0, devices={'master': DeviceState(values={}, events=[]), 'tablet': DeviceState(values={}, events=[])}), State(name='SINGLESTEPPERSLIDER', id=1, devices={'master': DeviceState(values=OrderedDict([('position', 'uint32_t'), ('speed', 'uint32_t'), ('acceleration', 'uint32_t')]), events=['homeStepper', 'positiveMove', 'negativeMove']), 'tablet': DeviceState(values={}, events=[])})]
+STATES = [State(name='IDLE', id=0, devices={'master': DeviceState(values={}, events=[]), 'tablet': DeviceState(values={}, events=[])}), State(name='SINGLESTEPPERSLIDER', id=1, devices={'master': DeviceState(values=OrderedDict([('position', 'uint32_t'), ('speed', 'uint32_t'), ('acceleration', 'uint32_t')]), events=['homeStepper', 'positiveMove', 'negativeMove', 'enableStepper', 'disableStepper']), 'tablet': DeviceState(values={}, events=[])})]
 
 if len(sys.argv) > 2:
     print >>sys.stderr, "Usage: python gen.py [serialport]"
@@ -87,7 +87,7 @@ if port.read(1) != '\x05':
     comm_error()
 
 its_build_id, = struct.unpack("<I", port.read(4))
-my_build_id = 0x9aaa1bfc
+my_build_id = 0x6a19ede2
 if its_build_id != my_build_id:
     print >>sys.stderr, "Mismatching build IDs: expected %#08x but got %#08x, exiting" % (my_build_id, its_build_id)
     sys.exit(3)

@@ -34,6 +34,8 @@ namespace events {
 void homeStepper();
 void positiveMove();
 void negativeMove();
+void enableStepper();
+void disableStepper();
 }
 }
 

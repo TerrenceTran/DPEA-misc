@@ -12,12 +12,12 @@ namespace SINGLESTEPPERSLIDER {
   void setup() {
     
     stepper.connectToPort(STEPPER_PORT);
-    stepper.setSpeedInStepsPerSecond(10);
-    stepper.setAccelerationInStepsPerSecondPerSecond(50);
+    stepper.setSpeedInStepsPerSecond(300);
+    stepper.setAccelerationInStepsPerSecondPerSecond(1000);
     stepper.setCurrentPositionInSteps(0.0);
     stepper.enableStepper();
     
-    position.value = 10;
+    position.value = 160;
   }
   
   void loop() {
@@ -45,7 +45,14 @@ namespace SINGLESTEPPERSLIDER {
   void events::negativeMove() {
     stepper.moveRelativeInSteps(-1 * position.value);
   }
-  
+
+  void events::enableStepper() {
+    stepper.enableStepper();
+  }
+
+  void events::disableStepper() {
+    stepper.disableStepper();
+  }
   void enter() {
     stepper.enableStepper();
   }

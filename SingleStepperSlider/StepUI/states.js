@@ -30,7 +30,9 @@ var SINGLESTEPPERSLIDER = {
     events: {
       homeStepper: function homeStepper() { manager.sendEvent(0, 1); },
       positiveMove: function positiveMove() { manager.sendEvent(1, 1); },
-      negativeMove: function negativeMove() { manager.sendEvent(2, 1); }
+      negativeMove: function negativeMove() { manager.sendEvent(2, 1); },
+      enableStepper: function enableStepper() { manager.sendEvent(3, 1); },
+      disableStepper: function disableStepper() { manager.sendEvent(4, 1); }
     }
   },
   tablet: {

@@ -26,8 +26,8 @@ function setup() {
   attrs = {fill:255, size:100, align:CENTER, style:BOLD, leading:50, strokeWeight:10, strokeColor:0}; //This is our text attributes variable
   
   //Here we create the menu scene. It a simple ButtonScene with one button with the following names and button action
-  var menuButtonNames = ["Step Up", "Step Down"];
-  var menuButtonActions = [this.positiveMove.bind(this), this.negativeMove.bind(this)];
+  var menuButtonNames = ["Up", "Down", "Enable", "Disable"];
+  var menuButtonActions = [this.positiveMove.bind(this), this.negativeMove.bind(this), this.enableStepper.bind(this), this.disableStepper.bind(this)];
   
   this.MenuScene = new ButtonsScene("Step The Step", null, menuButtonNames, menuButtonActions, null, null, null, {size:100, leading:50});
   stage.addScene("MenuScene", this.MenuScene);
@@ -53,6 +53,16 @@ function positiveMove() {
 function negativeMove() {
   console.log("Negative Move");
   SINGLESTEPPERSLIDER.master.events.negativeMove();
+}
+
+function enableStepper() {
+  console.log("EnableStepper");
+  SINGLESTEPPERSLIDER.master.events.enableStepper();
+}
+
+function disableStepper() {
+  console.log("Disable Stepper");
+  SINGLESTEPPERSLIDER.master.events.disableStepper();
 }
 
 //All these are needed to handle touch/mouse events properly
