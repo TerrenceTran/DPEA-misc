@@ -20,19 +20,26 @@
 #define MICROSTEPPING 8
 #define TRANSMISSION 5
 #define BASE_STEPS_PER_REV 200
+#define MIN_SPEED 0.075
 
 int beamState = LOW;
 int lastBeamState = LOW;
+bool beamCount = false;
 int backlightState = LOW;
 int lastBacklightState = LOW;
+bool backlightCount = false;
 int motorState = LOW;
 int lastMotorState = LOW;
+bool motorCount = false;
+
+int potVal = 0;
+int lastPotVal = 0;
 
 FlexyStepper stepper;
 
 void setup() {
   ////// Pinmode all ports ///////////
-  
+
   pinMode(MOTOR_BUTTON_LIGHT, OUTPUT);
   pinMode(MOTOR_BUTTON, INPUT_PULLUP);
   pinMode(MOTOR_SPEED_POT, INPUT_PULLUP);
@@ -52,7 +59,7 @@ void setup() {
   stepper.connectToPort(MOTOR_PORT);
   stepper.setStepsPerRevolution(BASE_STEPS_PER_REV * TRANSMISSION * MICROSTEPPING);
   stepper.setSpeedInRevolutionsPerSecond(1.0);
-  stepper.setAccelerationInRevolutionsPerSecondPerSecond(5.0);
+  stepper.setAccelerationInRevolutionsPerSecondPerSecond(0.2);
   stepper.setCurrentPositionInRevolutions(0.0);
   stepper.setTargetPositionRelativeInRevolutions(1000.0);
   stepper.disableStepper();
@@ -70,43 +77,61 @@ void setup() {
 void loop() {
 
   //////////// Non-Latching Buttons require Button States /////////
-  beamState = digitalRead(BEAM_BUTTON);
-  backlightState = digitalRead(BACKLIGHT_BUTTON);
-  motorState = digitalRead(MOTOR_BUTTON);
-  
-  if (beamState != lastBeamState) {
-    digitalWrite(BEAM_BUTTON_LIGHT, beamState);
-    digitalWrite(BEAM_LEDS, beamState);
-    delay(50);
+  beamState = !digitalRead(BEAM_BUTTON);
+  backlightState = !digitalRead(BACKLIGHT_BUTTON);
+  motorState = !digitalRead(MOTOR_BUTTON);
+  potVal = analogRead(MOTOR_SPEED_POT);
+
+  if (beamState != lastBeamState && beamState == HIGH) {
+    beamCount = !beamCount;
+
+    if (beamCount == false) {
+      digitalWrite(BEAM_BUTTON_LIGHT, LOW);
+      digitalWrite(BEAM_LEDS, LOW);
+    }
+    else {
+      digitalWrite(BEAM_BUTTON_LIGHT, HIGH);
+      digitalWrite(BEAM_LEDS, HIGH);
+    }
   }
 
-  if (backlightState != lastBacklightState) {
-    digitalWrite(BACKLIGHT_BUTTON_LIGHT, backlightState);
-    digitalWrite(BACKLIGHT_LEDS, backlightState);
-    delay(50);
+  if (backlightState != lastBacklightState && backlightState == HIGH) {
+    backlightCount = !backlightCount;
+    
+    if (backlightCount == false) {
+      digitalWrite(BACKLIGHT_BUTTON_LIGHT, LOW);
+      digitalWrite(BACKLIGHT_LEDS, LOW);
+    }
+    else {
+      digitalWrite(BACKLIGHT_BUTTON_LIGHT, HIGH);
+      digitalWrite(BACKLIGHT_LEDS, HIGH);
+    }
   }
 
-  if (motorState != lastMotorState) {
-    //On State: enable motor and reset revolution goal
-    if (motorState == HIGH) {
+  if (motorState != lastMotorState && motorState == HIGH) {
+    motorCount = ! motorCount;
+    
+    if (motorCount == false) {
+      digitalWrite(MOTOR_BUTTON_LIGHT, LOW);
+      //stepper.disableStepper();
+      stepper.setSpeedInRevolutionsPerSEcond(0.0);
+    }
+    else {
       digitalWrite(MOTOR_BUTTON_LIGHT, HIGH);
       stepper.resetVelocity();
-      stepper.setSpeedInRevolutionsPerSecond(analogRead(MOTOR_SPEED_POT)/255.0);
       stepper.setTargetPositionRelativeInRevolutions(1000.0);
       stepper.enableStepper();
     }
-    //Off State: disable motor and turn off light
-    else {
-      digitalWrite(MOTOR_BUTTON_LIGHT, LOW);
-      stepper.disableStepper();
-    }
-    delay(50);
+    delay(50); // debouncing delay
   }
-  
+
+  if (motorCount && potVal != lastPotVal) stepper.setSpeedInRevolutionsPerSecond(MIN_SPEED + (float)potVal / 1800.0);
+
   stepper.processMovement();
 
   ///////////// Save Last States For Next Loop Iteration /////////////
   lastMotorState = motorState;
   lastBeamState = beamState;
   lastBacklightState = backlightState;
+  lastPotVal = potVal;
 }
