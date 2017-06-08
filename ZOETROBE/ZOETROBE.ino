@@ -97,7 +97,7 @@ void loop() {
 
   if (backlightState != lastBacklightState && backlightState == HIGH) {
     backlightCount = !backlightCount;
-    
+
     if (backlightCount == false) {
       digitalWrite(BACKLIGHT_BUTTON_LIGHT, LOW);
       digitalWrite(BACKLIGHT_LEDS, LOW);
@@ -108,13 +108,18 @@ void loop() {
     }
   }
 
-  if (motorState != lastMotorState && motorState == HIGH) {
+  if (digitalRead(LID_SENSOR)) { // if lid is open disable shit
+    motorCount = false;
+    digitalWrite(MOTOR_BUTTON_LIGHT, LOW);
+    stepper.disableStepper();
+  }
+
+  else if (motorState != lastMotorState && motorState == HIGH) {
     motorCount = ! motorCount;
-    
+
     if (motorCount == false) {
       digitalWrite(MOTOR_BUTTON_LIGHT, LOW);
-      //stepper.disableStepper();
-      stepper.setSpeedInRevolutionsPerSEcond(0.0);
+      stepper.disableStepper();
     }
     else {
       digitalWrite(MOTOR_BUTTON_LIGHT, HIGH);
@@ -125,7 +130,7 @@ void loop() {
     delay(50); // debouncing delay
   }
 
-  if (motorCount && potVal != lastPotVal) stepper.setSpeedInRevolutionsPerSecond(MIN_SPEED + (float)potVal / 1800.0);
+  if (motorCount && potVal != lastPotVal) stepper.setSpeedInRevolutionsPerSecond(MIN_SPEED + (float)potVal / 1500.0);
 
   stepper.processMovement();
 
@@ -134,4 +139,5 @@ void loop() {
   lastBeamState = beamState;
   lastBacklightState = backlightState;
   lastPotVal = potVal;
+
 }
